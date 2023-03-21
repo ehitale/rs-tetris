@@ -1,4 +1,5 @@
 use std::io;
+mod experiment;
 
 const FIELD_WIDTH: usize = 12;
 const FIELD_HEIGHT: usize = 18;
@@ -50,5 +51,6 @@ fn main() {
             _ => None,    
         }
     }
-    
+
+    experiment::clear_everything();
 }
