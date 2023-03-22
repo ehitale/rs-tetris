@@ -1,4 +1,5 @@
 use std::io;
+
 mod experiment;
 
 const FIELD_WIDTH: usize = 12;
@@ -40,7 +41,7 @@ fn main() {
                 None
             }
         }
-    }
+    };
     
     fn _rotate (px: u32, py: u32, r: u32) -> Option<u32> {
         match r % 4 {
@@ -53,4 +54,5 @@ fn main() {
     }
 
     experiment::clear_everything();
+
 }

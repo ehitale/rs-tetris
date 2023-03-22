@@ -1,8 +1,11 @@
-use std::io::{Write, stdout};
-use crossterm::{ExecutableCommand, terminal, terminal::{Clear, ClearType, size}};
+use std::io::{Write, stdout, Stdout};
+use crossterm::{ExecutableCommand, Result};
+use crossterm::{terminal::*, style::*};
 
-pub fn clear_everything () {
+//function currently returns '()'
+pub fn clear_everything () -> Result<()> {
     let mut stdout = stdout();
-    stdout.execute(Clear(ClearType::All));
-    println!("{:?}", size());
+    stdout.execute(Clear(ClearType::All))?.execute(SetBackgroundColor(Color::Blue));
+
+    Ok(())
 }
