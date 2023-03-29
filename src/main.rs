@@ -1,11 +1,13 @@
-use std::io;
+use std::io::{Write, stdout};
+use crossterm::{ExecutableCommand, QueueableCommand, Result};
+use crossterm::{terminal, style::{self, Stylize}, cursor};
 
 mod experiment;
 
 const FIELD_WIDTH: usize = 12;
 const FIELD_HEIGHT: usize = 18;
 
-fn main() {
+fn main() -> Result<()> {
     
     let mut tetromino: Vec<String> = vec![
         String::new(), 
@@ -27,18 +29,20 @@ fn main() {
     tetromino[6].push_str("..X...X..XX.....");
 
     //couldn't I just use a 'char' array? what do I need the Option for?
-    let mut p_field: [Option<char>; FIELD_WIDTH * FIELD_HEIGHT] = [None; FIELD_WIDTH * FIELD_HEIGHT];
+    let mut p_field: [u8; FIELD_WIDTH * FIELD_HEIGHT] = [b' '; FIELD_WIDTH * FIELD_HEIGHT];
 
     for x in 0..FIELD_WIDTH {
         for y in 0..FIELD_HEIGHT {
             p_field[y * FIELD_WIDTH + x] = 
             
             if x == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT {
-                Some('9')
+                //'9' is the border in Javid's example.
+                b'9'
             }
 
             else {
-                None
+                //this should be whitespace.
+                b' '
             }
         }
     };
@@ -53,6 +57,12 @@ fn main() {
         }
     }
 
-    experiment::clear_everything();
+    let mut buffer = stdout();
 
+    buffer.execute(terminal::Clear(terminal::ClearType::All))?;
+    buffer.write(&p_field)?;
+    // experiment::clear_everything();
+
+    Ok(())
+    
 }
