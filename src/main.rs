@@ -1,6 +1,5 @@
 use std::io::{Write, stdout};
-use crossterm::{ExecutableCommand, QueueableCommand, Result};
-use crossterm::{terminal, style::{self, Stylize}, cursor};
+use crossterm::{ExecutableCommand, QueueableCommand, Result, terminal, style::{self, Stylize}, cursor};
 
 mod experiment;
 
@@ -59,9 +58,30 @@ fn main() -> Result<()> {
 
     let mut buffer = stdout();
 
-    buffer.execute(terminal::Clear(terminal::ClearType::All))?;
-    buffer.write(&p_field)?;
+    let game_over = false;
+
+    
+    // while !game_over == true {
+
+    for x in 0..FIELD_WIDTH {
+        for y in 0..FIELD_HEIGHT {
+            buffer
+    // first execute should contain buffer dimensions.
+                .execute(cursor::MoveTo(x as u16,y as u16))?;
+            
+            buffer.write(
+                " ABCDEFG=#"[p_field[y * FIELD_WIDTH + x]]
+            );
+        }
+    }
+        buffer.execute(terminal::Clear(terminal::ClearType::All))?;
+    
+        buffer
+            .execute(terminal::SetSize(terminal::size()?.0, terminal::size()?.1))?
+            .execute(cursor::MoveTo(0, 0))?;
+    // }
     // experiment::clear_everything();
+    println!("\nTerminal size: {:?}", terminal::size()?);
 
     Ok(())
     
