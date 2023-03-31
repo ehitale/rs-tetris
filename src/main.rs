@@ -27,21 +27,20 @@ fn main() -> Result<()> {
     tetromino[5].push_str(".X...X...XX.....");
     tetromino[6].push_str("..X...X..XX.....");
 
-    //couldn't I just use a 'char' array? what do I need the Option for?
-    let mut p_field: [u8; FIELD_WIDTH * FIELD_HEIGHT] = [b' '; FIELD_WIDTH * FIELD_HEIGHT];
+    //leave this as a char (or u8), just convert to a byte it's time to write?
+    let mut p_field: [usize; FIELD_WIDTH * FIELD_HEIGHT] = [0; FIELD_WIDTH * FIELD_HEIGHT];
 
     for x in 0..FIELD_WIDTH {
         for y in 0..FIELD_HEIGHT {
             p_field[y * FIELD_WIDTH + x] = 
             
             if x == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT {
-                //'9' is the border in Javid's example.
-                b'9'
+                //9 is the border in Javid's example.
+                9
             }
 
             else {
-                //this should be whitespace.
-                b' '
+                0
             }
         }
     };
@@ -70,7 +69,7 @@ fn main() -> Result<()> {
                 .execute(cursor::MoveTo(x as u16,y as u16))?;
             
             buffer.write(
-                " ABCDEFG=#"[p_field[y * FIELD_WIDTH + x]]
+                " ABCDEFG=#"[(p_field[y * FIELD_WIDTH + x])]
             );
         }
     }
