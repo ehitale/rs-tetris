@@ -1,5 +1,5 @@
 use std::io::{Write, stdout};
-use crossterm::{ExecutableCommand, QueueableCommand, Result, terminal, style::{self, Stylize}, cursor};
+use crossterm::{ExecutableCommand, Result, terminal, cursor};
 
 mod experiment;
 
