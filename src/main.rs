@@ -1,3 +1,5 @@
+//based off of Javidx9's tetris tutorial in C++.
+
 use std::io::{Write, stdout};
 use crossterm::{ExecutableCommand, Result, terminal, cursor};
 
