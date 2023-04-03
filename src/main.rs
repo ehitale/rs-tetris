@@ -59,7 +59,7 @@ fn main() -> Result<()> {
 
     let mut buffer = stdout();
 
-    let game_over = false;
+    let _game_over = false;
 
     
     // while !game_over == true {

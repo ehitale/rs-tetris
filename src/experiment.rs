@@ -1,14 +1,14 @@
-use std::io::{Write, stdout};
-use crossterm::{ExecutableCommand, QueueableCommand, Result};
+use std::io::{stdout};
+use crossterm::{ExecutableCommand, Result};
 use crossterm::{terminal, style::{self, Stylize}, cursor};
 
-pub fn clear_everything () -> Result<()> {
+pub fn _clear_everything () -> Result<()> {
     let mut stdout = stdout();
     stdout.execute(terminal::Clear(terminal::ClearType::All))?;
     
     let size = match terminal::size() {
         Ok((x, y)) => (x, y),
-        Err(e) => panic!("couldn't find terminal dimensions"),
+        Err(_) => panic!("couldn't find terminal dimensions"),
     };
 
     for y in 0..size.1 {
