@@ -1,5 +1,5 @@
-use std::io::{Write, stdout};
-use crossterm::{ExecutableCommand, QueueableCommand, Result};
+use std::io::{stdout};
+use crossterm::{ExecutableCommand, Result};
 use crossterm::{terminal, style::{self, Stylize}, cursor};
 
 pub fn clear_everything () -> Result<()> {

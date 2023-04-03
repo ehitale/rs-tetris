@@ -59,7 +59,7 @@ fn main() -> Result<()> {
 
     let mut buffer = stdout();
 
-    let game_over = false;
+    let _game_over = false;
 
     
     // while !game_over == true {
@@ -69,9 +69,9 @@ fn main() -> Result<()> {
             buffer
     // first execute should contain buffer dimensions.
                 .execute(cursor::MoveTo(x as u16,y as u16))?;
-            
+
             buffer.write(
-                " ABCDEFG=#"[(p_field[y * FIELD_WIDTH + x])]
+                " ABCDEFG=#".as_bytes()[p_field[y * FIELD_WIDTH + x]]
             );
         }
     }
