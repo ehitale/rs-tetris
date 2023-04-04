@@ -2,7 +2,7 @@
 
 use std::io::{Write, stdout};
 use crossterm::{ExecutableCommand, Result, terminal, cursor};
-// use std::{thread, time};
+use std::{thread, time};
 
 mod experiment;
 
@@ -48,15 +48,34 @@ fn main() -> Result<()> {
         }
     };
     
-    fn _rotate (px: u32, py: u32, r: u32) -> Option<u32> {
+    fn _rotate (px: u8, py: u8, r: u8) -> u8 {
         match r % 4 {
-            0 => Some(py * 4 + px),
-            1 => Some(12 + py - (px * 4)),
-            2 => Some(15 - (py * 4) - px),
-            3 => Some(3 - py + (px * 4)),
-            _ => None,    
+            0 => py * 4 + px,
+            1 => 12 + py - (px * 4),
+            2 => 15 - (py * 4) - px,
+            3 => 3 - py + (px * 4),
+            _ => 0,
         }
     }
+
+    fn does_tetromino_fit (id_tetromino: u8, rotation: u8, x_pos: u8, y_pos: u8) -> bool {
+        for px in 0..4 {
+            for py in 0.4 {
+                // gets index into piece
+                let pi = rotate(px, py, rotation);
+
+                // gets index into field
+                let fi = (y_pos + py) * FIELD_WIDTH + (x_pos + px);
+                if (x_pos + px >= 0 && x_pos + px < FIELD_WIDTH) {
+                    if (y_pos + py >= 0 && y_pos + py <   FIELD_HEIGHT) {
+                        if (tetromino[id_tetromino][pi]
+                    }
+                }
+            }
+        } 
+        
+        true
+    };
 
     let mut buffer = stdout();
     
@@ -89,7 +108,7 @@ fn main() -> Result<()> {
         }
         // buffer.execute(terminal::Clear(terminal::ClearType::All))?;
     // }
-    println!("\nTerminal size: {:?}", terminal::size()?);
+    println!("Terminal size: {:?}", terminal::size()?);
 
     Ok(())
     
