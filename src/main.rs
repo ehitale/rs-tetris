@@ -1,7 +1,8 @@
-//based off of Javidx9's tetris tutorial in C++.
+//based off of Javidx9's tetris tutorial in C++. (https://youtu.be/8OK8_tHeCIA)
 
 use std::io::{Write, stdout};
 use crossterm::{ExecutableCommand, Result, terminal, cursor};
+// use std::{thread, time};
 
 mod experiment;
 
@@ -36,7 +37,7 @@ fn main() -> Result<()> {
         for y in 0..FIELD_HEIGHT {
             p_field[y * FIELD_WIDTH + x] = 
             
-            if x == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT {
+            if x == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT - 1 {
                 //9 is the border in Javid's example.
                 9
             }
@@ -58,30 +59,36 @@ fn main() -> Result<()> {
     }
 
     let mut buffer = stdout();
-
-    let _game_over = false;
-
     
-    // while !game_over == true {
+    buffer.execute(terminal::Clear(terminal::ClearType::All))?;
+    buffer.execute(terminal::SetSize(terminal::size()?.0, terminal::size()?.1))?;            
+    
+    let game_over = false;
 
-    for x in 0..FIELD_WIDTH {
-        for y in 0..FIELD_HEIGHT {
-            buffer
-    // first execute should contain buffer dimensions.
-                .execute(cursor::MoveTo(x as u16,y as u16))?;
+    // while game_over == false {
 
-            buffer.write(
-                " ABCDEFG=#".as_bytes()[p_field[y * FIELD_WIDTH + x]]
-            );
+    // // timing
+    
+    // // input
+    
+    // // logic
+
+    // // output
+    
+        for x in 0..FIELD_WIDTH {
+            for y in 0..FIELD_HEIGHT {
+    
+                buffer.execute(cursor::MoveTo((x) as u16, (y) as u16))?;
+                buffer.write(
+                    // this is an expression that returns a reference to a slice of u8, which is an indexed value of p_field.
+                    &[" ABCDEFG=#".as_bytes()[p_field[y * FIELD_WIDTH + x]]]
+                ).unwrap();
+    
+                thread::sleep(time::Duration::from_millis(50));
+            }
         }
-    }
-        buffer.execute(terminal::Clear(terminal::ClearType::All))?;
-    
-        buffer
-            .execute(terminal::SetSize(terminal::size()?.0, terminal::size()?.1))?
-            .execute(cursor::MoveTo(0, 0))?;
+        // buffer.execute(terminal::Clear(terminal::ClearType::All))?;
     // }
-    // experiment::clear_everything();
     println!("\nTerminal size: {:?}", terminal::size()?);
 
     Ok(())
