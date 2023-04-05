@@ -11,26 +11,30 @@ const FIELD_HEIGHT: usize = 18;
 
 fn main() -> Result<()> {
     
-    let mut tetromino: Vec<String> = vec![
-        String::new(), 
-        String::new(), 
-        String::new(), 
-        String::new(), 
-        String::new(), 
-        String::new(), 
-        String::new(), 
-        String::new()
-    ];
+
     
-    tetromino[0].push_str("..X...X...X...X.");
-    tetromino[1].push_str("..X..XX...X.....");
-    tetromino[2].push_str(".....XX..XX.....");
-    tetromino[3].push_str("..X..XX..X......");
-    tetromino[4].push_str(".X...XX...X.....");
-    tetromino[5].push_str(".X...X...XX.....");
-    tetromino[6].push_str("..X...X..XX.....");
+    // let mut tetromino: [String; 7] = [
+    //     String::from(), 
+    //     String::from(), 
+    //     String::from(), 
+    //     String::from(), 
+    //     String::from(), 
+    //     String::from(), 
+    //     String::from() 
+    // ];
+    
 
     //leave this as a char (or u8), just convert to a byte it's time to write?
+    let mut tetromino: [&str; 7] = [
+        "..X...X...X...X.", 
+        "..X..XX...X.....", 
+        ".....XX..XX.....", 
+        "..X..XX..X......", 
+        ".X...XX...X.....", 
+        ".X...X...XX.....", 
+        "..X...X..XX....." 
+    ];
+
     let mut p_field: [usize; FIELD_WIDTH * FIELD_HEIGHT] = [0; FIELD_WIDTH * FIELD_HEIGHT];
 
     for x in 0..FIELD_WIDTH {
@@ -41,40 +45,11 @@ fn main() -> Result<()> {
                 //9 is the border in Javid's example.
                 9
             }
-
+    
             else {
                 0
             }
         }
-    };
-    
-    fn _rotate (px: u8, py: u8, r: u8) -> u8 {
-        match r % 4 {
-            0 => py * 4 + px,
-            1 => 12 + py - (px * 4),
-            2 => 15 - (py * 4) - px,
-            3 => 3 - py + (px * 4),
-            _ => 0,
-        }
-    }
-
-    fn does_tetromino_fit (id_tetromino: u8, rotation: u8, x_pos: u8, y_pos: u8) -> bool {
-        for px in 0..4 {
-            for py in 0.4 {
-                // gets index into piece
-                let pi = rotate(px, py, rotation);
-
-                // gets index into field
-                let fi = (y_pos + py) * FIELD_WIDTH + (x_pos + px);
-                if (x_pos + px >= 0 && x_pos + px < FIELD_WIDTH) {
-                    if (y_pos + py >= 0 && y_pos + py <   FIELD_HEIGHT) {
-                        if (tetromino[id_tetromino][pi]
-                    }
-                }
-            }
-        } 
-        
-        true
     };
 
     let mut buffer = stdout();
@@ -84,32 +59,73 @@ fn main() -> Result<()> {
     
     let game_over = false;
 
-    // while game_over == false {
+    while game_over == false {
 
-    // // timing
+    // timing
     
-    // // input
+    // input
     
-    // // logic
+    // logic
 
-    // // output
-    
+    // output
+
+        // draw field
         for x in 0..FIELD_WIDTH {
             for y in 0..FIELD_HEIGHT {
     
                 buffer.execute(cursor::MoveTo((x) as u16, (y) as u16))?;
                 buffer.write(
-                    // this is an expression that returns a reference to a slice of u8, which is an indexed value of p_field.
+                    // this is an expression that returns a reference to a slice of u8, which indexed by an indexed value of p_field.
                     &[" ABCDEFG=#".as_bytes()[p_field[y * FIELD_WIDTH + x]]]
                 ).unwrap();
     
                 thread::sleep(time::Duration::from_millis(50));
             }
         }
-        // buffer.execute(terminal::Clear(terminal::ClearType::All))?;
-    // }
+
+        // draw current piece
+        for px in 0..4 {
+            for py in 0..4 {
+                
+            }
+        }
+    }
     println!("Terminal size: {:?}", terminal::size()?);
+
+    println!("{:?}", tetromino[0usize].chars().nth(0).unwrap());
 
     Ok(())
     
+}
+
+fn does_tetromino_fit (tetro: [&str; 7], p_field: [usize; FIELD_WIDTH & FIELD_HEIGHT], id_tetromino: u8, rotation: u8, x_pos: u8, y_pos: u8) -> bool {
+    for px in 0..4 {
+        for py in 0..4 {
+            // gets index into piece
+            let pi: u8 = rotate(px, py, rotation);
+
+            // gets index into field
+            let fi: u8 = (y_pos + py) * FIELD_WIDTH as u8 + (x_pos + px);
+            
+            if x_pos + px >= 0 && x_pos + px < 12 {
+                if y_pos + py >= 0 && y_pos + py < 18 {
+                    if tetro[id_tetromino as usize].as_bytes()[pi as usize] == b'X' && p_field[fi as usize] != 0 {
+                        return false;
+                    }
+                }
+            }
+        }
+    } 
+    
+    true
+}
+
+fn rotate (px: u8, py: u8, r: u8) -> u8 {
+    match r % 4 {
+        0 => py * 4 + px,
+        1 => 12 + py - (px * 4),
+        2 => 15 - (py * 4) - px,
+        3 => 3 - py + (px * 4),
+        _ => 0,
+    }
 }
