@@ -1,15 +1,16 @@
 //based off of Javidx9's tetris tutorial in C++. (https://youtu.be/8OK8_tHeCIA)
+//no longer uses crossterm
 
 use std::io::{Write, stdout};
-use crossterm::{ExecutableCommand, Result, terminal, event::{read, poll, Event, KeyCode}, cursor};
-use std::{thread, time};
+// use crossterm::{ExecutableCommand, Result, terminal, event::{read, poll, Event, KeyCode}, cursor};
+// use std::{thread, time};
 
 mod experiment;
 
 const FIELD_WIDTH: u8 = 12;
 const FIELD_HEIGHT: u8 = 18;
 
-fn main() -> Result<()> {
+fn main() {
     
     // let mut tetromino: [String; 7] = [
     //     String::from(), 
@@ -23,15 +24,28 @@ fn main() -> Result<()> {
     
 
     // // leave this as a char (or u8), just convert to a byte it's time to write?
-    // let tetromino: [&str; 7] = [
-    //     "..X...X...X...X.", 
-    //     "..X..XX...X.....", 
-    //     ".....XX..XX.....", 
-    //     "..X..XX..X......", 
-    //     ".X...XX...X.....", 
-    //     ".X...X...XX.....", 
-    //     "..X...X..XX....." 
-    // ];
+    let _tetromino: [&str; 7] = [
+        "..X...X...X...X.", 
+        "..X..XX...X.....", 
+        ".....XX..XX.....", 
+        "..X..XX..X......", 
+        ".X...XX...X.....", 
+        ".X...X...XX.....", 
+        "..X...X..XX....." 
+    ];
+    
+    let p_field: &mut [u8] = &mut [0; (FIELD_WIDTH * FIELD_HEIGHT) as usize];
+
+    for x in 0..FIELD_WIDTH {
+        for y in 0..FIELD_HEIGHT {
+            p_field[(y * FIELD_WIDTH + x) as usize] =
+                if y == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT - 1 {
+                    9
+                } else {
+                    0
+                }
+        }
+    }
 
     // let mut p_field: [u8; (FIELD_WIDTH * FIELD_HEIGHT) as usize] = [0; (FIELD_WIDTH * FIELD_HEIGHT) as usize];
 
@@ -50,8 +64,8 @@ fn main() -> Result<()> {
     //     }
     // };
 
-    // let mut buffer = stdout();
-    // buffer.execute(terminal::Clear(terminal::ClearType::All))?;           
+    let mut buffer = stdout();
+    buffer.write(b"\x1B[2J").unwrap(); //clears the screen
 
     // terminal::enable_raw_mode().unwrap();
 
@@ -59,8 +73,6 @@ fn main() -> Result<()> {
     // let mut current_rotation = 0;
     // let mut current_x = FIELD_WIDTH as u8 / 2;
     // let mut current_y = 0;
-    
-    // let mut key: [bool; 4] = [false; 4];
     
     // let game_over = false;
 
@@ -95,6 +107,18 @@ fn main() -> Result<()> {
     // // output
 
     //     // draw field
+
+    for x in 0..FIELD_WIDTH {
+        for y in 0..FIELD_HEIGHT {
+            buffer.write(
+                format!("\x1B[{};{}H", x + 1, y + 1).as_bytes()    
+            ).unwrap();
+            buffer.write(&[
+                " ABCDEFG=#".as_bytes()[p_field[(y * FIELD_WIDTH + x) as usize] as usize]
+            ]).unwrap();
+        }
+    }
+
     //     for x in 0..FIELD_WIDTH {
     //         for y in 0..FIELD_HEIGHT {
     
@@ -125,9 +149,8 @@ fn main() -> Result<()> {
     
     // experiment::alternate_screen()?;
     // experiment::keyboard_events()?;
-    experiment::no_library_extended()?;
-    // buffer.flush();
-    Ok(())
+    // experiment::no_library_extended()?;
+    buffer.flush().unwrap();
     
 }
 
@@ -136,7 +159,7 @@ fn _does_tetromino_fit (tetro: [&str; 7], p_field: [u8; (FIELD_WIDTH * FIELD_HEI
     for px in 0..4 {
         for py in 0..4 {
             // gets index into piece
-            let pi: u8 = rotate(px, py, rotation);
+            let pi: u8 = _rotate(px, py, rotation);
 
             // gets index into field
             let fi: u8 = (y_pos + py) * FIELD_WIDTH as u8 + (x_pos + px);
@@ -154,7 +177,7 @@ fn _does_tetromino_fit (tetro: [&str; 7], p_field: [u8; (FIELD_WIDTH * FIELD_HEI
     true
 }
 
-fn rotate (px: u8, py: u8, r: u8) -> u8 {
+fn _rotate (px: u8, py: u8, r: u8) -> u8 {
     match r % 4 {
         0 => py * 4 + px,
         1 => 12 + py - (px * 4),

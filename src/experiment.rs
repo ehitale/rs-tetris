@@ -39,17 +39,17 @@ pub fn _keyboard_events() -> Result<()> {
     //    Err(_) => panic!("couldn't find terminal dimensions"),
     // };
 
-    loop {
-        match read()? {
-            Event::Key(event) => println!("{:?}", event.code),
-            _ => (),
-        }
-    }
+    // loop {
+    //     match read()? {
+    //         Event::Key(event) => println!("{:?}", event.code),
+    //         _ => (),
+    //     }
+    // }
 
     Ok(())
 }
 
-pub fn no_library() -> Result<()> {
+pub fn _no_library() -> Result<()> {
     let mut p_field: &mut [u8] = &mut [0; 144];
 
     for x in 0..12 {
@@ -78,7 +78,7 @@ pub fn no_library() -> Result<()> {
     Ok(())
 }
 
-pub fn no_library_extended() -> Result<()> {
+pub fn _no_library_extended() -> Result<()> {
     let p_field: &mut [u8] = &mut [0; 144];
 
     for x in 0..FIELD_WIDTH {
@@ -92,21 +92,23 @@ pub fn no_library_extended() -> Result<()> {
         }
     }
 
-    // let mut screen_buffer: &mut [u8] = &mut [65; 144]; // look into Cursors; that seek function is looking might useful.
+    // let mut screen_buffer: &mut [u8] = &mut [65; 144]; // look into Cursors; that seek function is looking might useful. (doesn't seem necessary anymore)
     let mut stdout = stdout();
 
-    stdout.write(b"\x1B[2J");
+    stdout.write(b"\x1B[2J").unwrap();
 
     for x in 0..FIELD_WIDTH {
         for y in 0..FIELD_HEIGHT {
+            stdout.write(
+                format!("\x1B[{};{}H", x + 1, y + 1).as_bytes()    
+            ).unwrap();
             stdout.write(&[
                 " ABCDEFG=#".as_bytes()[p_field[(y * FIELD_WIDTH + x) as usize] as usize]
             ])?;
         }
-        stdout.write("\n".as_bytes()).unwrap();
     }
-    stdout.write(b"\x1B[0;0H");
-    stdout.write(b"That's all folks!\n");
+    stdout.write(b"\x1B[0;0H").unwrap();
+    stdout.write(b"That's all folks!\n").unwrap();
 
     // stdout.write(screen_buffer)?;
     stdout.flush()?;
