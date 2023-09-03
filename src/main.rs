@@ -108,8 +108,8 @@ fn _does_tetromino_fit (tetro: [&str; 7], p_field: [u8; (FIELD_WIDTH * FIELD_HEI
             // gets index into field
             let fi: u8 = (y_pos + py) * FIELD_WIDTH as u8 + (x_pos + px);
             
-            if x_pos + px >= 0 && x_pos + px < FIELD_WIDTH as u8 {
-                if y_pos + py >= 0 && y_pos + py < FIELD_HEIGHT as u8 {
+            if x_pos + px > 0 && x_pos + px < FIELD_WIDTH as u8 {
+                if y_pos + py > 0 && y_pos + py < FIELD_HEIGHT as u8 {
                     if tetro[id_tetromino as usize].as_bytes()[pi as usize] == b'X' && p_field[fi as usize] != 0 {
                         return false;
                     }
