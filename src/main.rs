@@ -40,7 +40,7 @@ fn main() {
     for x in 0..FIELD_WIDTH {
         for y in 0..FIELD_HEIGHT {
             p_field[(y * FIELD_WIDTH + x) as usize] =
-                if y == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT - 1 {
+                if x == 0 || x == FIELD_WIDTH - 1 || y == FIELD_HEIGHT - 1 {
                     9
                 } else {
                     0
@@ -52,7 +52,7 @@ fn main() {
     let mut buffer = stdout();
     buffer.write(b"\x1B[2J").unwrap(); //clears the screen
 
-    let mut current_piece = 0;
+    let mut current_piece = 1;
     let mut current_rotation = 1;
     let mut current_x = FIELD_WIDTH as u8 / 2;
     let mut current_y = 0;
@@ -72,7 +72,7 @@ fn main() {
         for x in 0..FIELD_WIDTH {
             for y in 0..FIELD_HEIGHT {
                 buffer.write(
-                    format!("\x1B[{};{}H", x + 1, y + 1).as_bytes()    
+                    format!("\x1B[{};{}H", y + 1, x + 1).as_bytes()    
                 ).unwrap();
                 buffer.write(&[
                     " ABCDEFG=#".as_bytes()[p_field[(y * FIELD_WIDTH + x) as usize] as usize]
@@ -85,7 +85,7 @@ fn main() {
             for py in 0..4 {
                 if tetromino[current_piece as usize].as_bytes()[rotate(px, py, current_rotation) as usize] == b'X' {
                     buffer.write(
-                        format!("\x1B[{};{}H", current_x + px + 1, current_y + py + 1).as_bytes()
+                        format!("\x1B[{};{}H", current_y + py + 1, current_x + px + 1).as_bytes()
                     ).unwrap();
                     buffer.write(&[current_piece + 65]).unwrap();
                 }
